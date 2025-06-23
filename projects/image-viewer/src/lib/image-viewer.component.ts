@@ -420,11 +420,6 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
         const newBlob = new Blob([arrBuffer], { type: 'application/pdf' });
 
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(newBlob);
-            return;
-        }
-
         return window.URL.createObjectURL(newBlob);
     }
 

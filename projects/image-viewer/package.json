@@ -1,6 +1,6 @@
 {
   "name": "ng2-image-viewer",
-  "version": "4.0.0",
+  "version": "16.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/brenoprata10/ng2-image-viewer"
@@ -22,18 +22,10 @@
     "url": "https://github.com/brenoprata10/ng2-image-viewer/issues"
   },
   "homepage": "https://github.com/brenoprata10/ng2-image-viewer#readme",
-  "exports": {
-    "./src/lib/imageviewer": {
-      "style": "./src/lib/imageviewer.scss"
-    },
-    "./src/lib/image-viewer.component": {
-      "style": "./src/lib/image-viewer.component.scss"
-    }
-  },
   "peerDependencies": {
     "lodash": ">=4",
-    "@angular/common": ">=10",
-    "@angular/core": ">=10",
+    "@angular/common": ">=16",
+    "@angular/core": ">=16",
 	  "iv-viewer": "~2.0.0"
   }
 }

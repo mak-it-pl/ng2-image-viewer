@@ -10,7 +10,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/image-viewer/tsconfig.lib.json",
             "project": "projects/image-viewer/ng-package.json"
@@ -27,18 +27,6 @@
           "options": {
             "tsConfig": "projects/image-viewer/tsconfig.spec.json",
             "karmaConfig": "projects/image-viewer/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/image-viewer/tsconfig.lib.json",
-              "projects/image-viewer/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
@@ -58,20 +46,10 @@
               "devServerTarget": "ng2-image-viewer:serve:production"
             }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     }
   },
-  "defaultProject": "ng2-image-viewer",
   "cli": {
     "analytics": false
   }
