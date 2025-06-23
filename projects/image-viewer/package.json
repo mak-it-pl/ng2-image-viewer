@@ -1,6 +1,6 @@
 {
   "name": "ng2-image-viewer",
-  "version": "16.0.0",
+  "version": "17.3.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/brenoprata10/ng2-image-viewer"
@@ -24,8 +24,8 @@
   "homepage": "https://github.com/brenoprata10/ng2-image-viewer#readme",
   "peerDependencies": {
     "lodash": ">=4",
-    "@angular/common": ">=16",
-    "@angular/core": ">=16",
-	  "iv-viewer": "~2.0.0"
+    "@angular/common": ">=17.3.0",
+    "@angular/core": ">=17.3.0",
+    "iv-viewer": "~2.2.1"
   }
 }

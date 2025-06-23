@@ -10,8 +10,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 
-import ImageViewer from 'iv-viewer';
-import {FullScreenViewer} from 'iv-viewer';
+import { ImageViewer, FullScreenViewer } from 'iv-viewer';
 
 /**
  * @author Breno Prata - 22/12/2017
@@ -180,8 +179,16 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
         if (this.wrapper) {
             this.curSpan = this.wrapper.querySelector('#current');
-            this.viewer = new ImageViewer(this.wrapper.querySelector('.image-container'));
-            this.wrapper.querySelector('.total').innerHTML = this.totalImagens;
+            const imageContainer = this.wrapper.querySelector('.image-container');
+            if (imageContainer) {
+                const options = {
+                    zoomValue: this.zoomPercent,
+                    hasZoomButtons: this.zoomInButton || this.zoomOutButton,
+                    zoomStep: 10,
+                };
+                this.viewer = new ImageViewer(imageContainer, options);
+                this.wrapper.querySelector('.total').innerHTML = this.totalImagens;
+            }
         }
     }
 
@@ -200,8 +207,12 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
             imgObj = this.BASE_64_PNG + this.getImagemAtual();
             this.stringDownloadImagem = this.BASE_64_IMAGE + this.getImagemAtual();
         }
-        this.viewer.load(imgObj, imgObj);
-        this.curSpan.innerHTML = this.indexImagemAtual;
+        if (this.viewer) {
+            this.viewer.load(imgObj, imgObj);
+        }
+        if (this.curSpan) {
+            this.curSpan.innerHTML = this.indexImagemAtual;
+        }
         this.inicializarCores();
     }
 
@@ -212,7 +223,19 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     injetarIframe(widthIframe: number, heightIframe: number) {
-        const ivImageWrap = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap').item(0);
+        if (!this.idContainer) {
+            return;
+        }
+
+        const container = document.getElementById(this.idContainer);
+        if (!container) {
+            return;
+        }
+
+        const ivImageWrap = container.getElementsByClassName('iv-image-wrap').item(0);
+        if (!ivImageWrap) {
+            return;
+        }
 
         const iframe = document.createElement('iframe');
 
@@ -225,8 +248,14 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     getTamanhoIframe() {
+        if (!this.idContainer) {
+            return {widthIframe: 0, heightIframe: 0};
+        }
 
         const container = document.getElementById(this.idContainer);
+        if (!container) {
+            return {widthIframe: 0, heightIframe: 0};
+        }
 
         const widthIframe = container.offsetWidth;
         const heightIframe = container.offsetHeight;
@@ -252,22 +281,30 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     limparCacheElementos() {
+        if (!this.idContainer) {
+            return;
+        }
 
         const container = document.getElementById(this.idContainer);
+        if (!container) {
+            return;
+        }
+
         const iframeElement = document.getElementById(this.getIdIframe());
-        const ivLargeImage = document.getElementById(this.idContainer).getElementsByClassName('iv-large-image').item(0);
 
-        if (iframeElement) {
+        let ivLargeImage = null;
+        try {
+            ivLargeImage = container.getElementsByClassName('iv-large-image').item(0);
+        } catch (e) {
+            // Ignore errors if element not found
+        }
 
+        if (iframeElement && container) {
             this.renderer.removeChild(container, iframeElement);
 
             if (ivLargeImage) {
-
                 this.renderer.removeChild(container, ivLargeImage);
             }
-        }
-
-        if (iframeElement) {
         }
 
         this.setStyleClass('iv-loader', 'visibility', 'auto');
@@ -340,19 +377,33 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     getScale() {
+        if (!this.idContainer) {
+            return 0.6;
+        }
 
         const containerElement = document.getElementById(this.idContainer);
-        const ivLargeImageElement = document.getElementById(this.idContainer).getElementsByClassName('iv-large-image').item(0);
+        if (!containerElement) {
+            return 0.6;
+        }
+
+        let ivLargeImageElement = null;
+        try {
+            ivLargeImageElement = containerElement.getElementsByClassName('iv-large-image').item(0);
+        } catch (e) {
+            return 0.6;
+        }
+
+        if (!ivLargeImageElement) {
+            return 0.6;
+        }
+
         const diferencaTamanhoImagem = ivLargeImageElement.clientWidth - containerElement.clientHeight;
 
         if (diferencaTamanhoImagem >= 250 && diferencaTamanhoImagem < 300) {
-
             return (ivLargeImageElement.clientWidth - containerElement.clientHeight) / (containerElement.clientHeight) - 0.1;
         } else if (diferencaTamanhoImagem >= 300 && diferencaTamanhoImagem < 400) {
-
             return ((ivLargeImageElement.clientWidth - containerElement.clientHeight) / (containerElement.clientHeight)) - 0.15;
         } else if (diferencaTamanhoImagem >= 400) {
-
             return ((ivLargeImageElement.clientWidth - containerElement.clientHeight) / (containerElement.clientHeight)) - 0.32;
         }
 
@@ -360,11 +411,21 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     isImagemSobrepondoNaVertical() {
+        if (!this.idContainer) {
+            return false;
+        }
+
+        const containerElement: Element = document.getElementById(this.idContainer);
+        if (!containerElement) {
+            return false;
+        }
+
+        const ivLargeImageElement: Element = containerElement.getElementsByClassName('iv-large-image').item(0);
+        if (!ivLargeImageElement) {
+            return false;
+        }
 
         const margemErro = 5;
-        const containerElement: Element = document.getElementById(this.idContainer);
-        const ivLargeImageElement: Element = document.getElementById(this.idContainer).getElementsByClassName('iv-large-image').item(0);
-
         return containerElement.clientHeight < ivLargeImageElement.clientWidth + margemErro;
     }
 
@@ -399,7 +460,12 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
         const timeout = this.resetarZoom();
         setTimeout(() => {
 
-            this.viewerFullscreen = new FullScreenViewer();
+            const options = {
+                zoomValue: this.zoomPercent,
+                hasZoomButtons: this.zoomInButton || this.zoomOutButton,
+                zoomStep: 10,
+            };
+            this.viewerFullscreen = new FullScreenViewer(options);
             let imgSrc;
 
             if (this.isURlImagem()) {
@@ -424,6 +490,9 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     private getImagemAtual() {
+        if (!this.images || !this.images.length || this.indexImagemAtual <= 0 || this.indexImagemAtual > this.images.length) {
+            return '';
+        }
         return this.images[this.indexImagemAtual - 1];
     }
 
@@ -444,27 +513,41 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     setStyleClass(nomeClasse: string, nomeStyle: string, cor: string) {
+        if (!this.idContainer) {
+            return;
+        }
+
+        const container = document.getElementById(this.idContainer);
+        if (!container) {
+            return;
+        }
 
         let cont;
-        const listaElementos = document.getElementById(this.idContainer).getElementsByClassName(nomeClasse);
+        const listaElementos = container.getElementsByClassName(nomeClasse);
 
         for (cont = 0; cont < listaElementos.length; cont++) {
-
-            this.renderer.setStyle(listaElementos.item(cont), nomeStyle, cor);
+            if (listaElementos.item(cont)) {
+                this.renderer.setStyle(listaElementos.item(cont), nomeStyle, cor);
+            }
         }
     }
 
     atualizarCorHoverIn(event: MouseEvent) {
-
-        this.renderer.setStyle(event.srcElement, 'color', this.buttonsHover);
+        if (event && event.srcElement) {
+            this.renderer.setStyle(event.srcElement, 'color', this.buttonsHover);
+        }
     }
 
     atualizarCorHoverOut(event: MouseEvent) {
-
-        this.renderer.setStyle(event.srcElement, 'color', this.buttonsColor);
+        if (event && event.srcElement) {
+            this.renderer.setStyle(event.srcElement, 'color', this.buttonsColor);
+        }
     }
 
     getIdIframe() {
-        return this.idContainer + '-iframe'
+        if (!this.idContainer) {
+            return 'image-viewer-iframe';
+        }
+        return this.idContainer + '-iframe';
     }
 }
