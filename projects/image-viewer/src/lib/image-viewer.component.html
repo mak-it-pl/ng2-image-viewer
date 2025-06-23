@@ -1,6 +1,6 @@
 <div id="{{idContainer}}" class="image-gallery-2">
     <div class="image-container"></div>
-    <div class="inline-icon">
+    <div class="inline-icon" *ngIf="!showOnlyPDF">
         <div>
             <a class="image-viewer-tooltip" (click)="showPDFOnly()" *ngIf="showPDFOnlyOption">
                 <span *ngIf="enableTooltip" class="tooltiptext filterTooltip">
@@ -12,7 +12,7 @@
         </div>
         <div *ngIf="showOptions" class="options-image-viewer">
             <a class="image-viewer-tooltip" *ngIf="zoomInButton"
-               (click)="zoomIn()" 
+               (click)="zoomIn()"
                (mouseover)="atualizarCorHoverIn($event)"
                (mouseout)="atualizarCorHoverOut($event)">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{zoomInTooltipLabel}}</span>
@@ -20,7 +20,7 @@
             </a>
             <a class="image-viewer-tooltip"
                *ngIf="zoomOutButton"
-               (click)="zoomOut()" 
+               (click)="zoomOut()"
                (mouseover)="atualizarCorHoverIn($event)"
                (mouseout)="atualizarCorHoverOut($event)">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{zoomOutTooltipLabel}}</span>
@@ -29,7 +29,7 @@
 
             <a class="image-viewer-tooltip"
                *ngIf="rotate"
-               (click)="rotacionarDireita()" 
+               (click)="rotacionarDireita()"
                (mouseover)="atualizarCorHoverIn($event)"
                (mouseout)="atualizarCorHoverOut($event)">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{rotateRightTooltipLabel}}</span>
@@ -37,7 +37,7 @@
             </a>
             <a class="image-viewer-tooltip"
                *ngIf="rotate"
-               (click)="rotacionarEsquerda()" 
+               (click)="rotacionarEsquerda()"
                (mouseover)="atualizarCorHoverIn($event)"
                (mouseout)="atualizarCorHoverOut($event)">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{rotateLeftTooltipLabel}}</span>
@@ -45,7 +45,7 @@
             </a>
             <a class="image-viewer-tooltip"
                *ngIf="resetZoom"
-               (click)="resetarZoom()" 
+               (click)="resetarZoom()"
                (mouseover)="atualizarCorHoverIn($event)"
                (mouseout)="atualizarCorHoverOut($event)">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{resetZoomTooltipLabel}}</span>
@@ -53,7 +53,7 @@
             </a>
             <a class="image-viewer-tooltip"
                *ngIf="fullscreen"
-               (click)="mostrarFullscreen()"  
+               (click)="mostrarFullscreen()"
                (mouseover)="atualizarCorHoverIn($event)"
                (mouseout)="atualizarCorHoverOut($event)">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{fullscreenTooltipLabel}}</span>
