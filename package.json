@@ -1,6 +1,6 @@
 {
   "name": "ng2-image-viewer",
-  "version": "17.3.4",
+  "version": "17.3.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -25,6 +25,14 @@
   transition: opacity 0.3s;
 }
 
+.image-container {
+  display: none;
+}
+
+.image-container--show {
+  display: block;
+}
+
 .image-viewer-tooltip .tooltiptext::after {
   content: "";
   position: absolute;
@@ -39,4 +47,12 @@
 .image-viewer-tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+::ng-deep pdf-document-properties-dialog,
+::ng-deep #documentPropertiesDialog,
+::ng-deep pdf-prepare-printing-dialog,
+::ng-deep pdf-password-dialog,
+::ng-deep #loadingBar {
+  display: none !important;
 }

@@ -72,6 +72,9 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
     zoomPercent = 100;
 
+    isPdfMode = false;
+    pdfBlob: string;
+
     constructor(private renderer: Renderer2) {}
 
     ngOnInit() {
@@ -197,13 +200,14 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
         let imgObj = this.BASE_64_PNG;
         if (this.isPDF()) {
-
+            this.isPdfMode = true;
             this.carregarViewerPDF();
         } else if (this.isURlImagem()) {
-
+            this.isPdfMode = false;
             imgObj = this.getImagemAtual();
             this.stringDownloadImagem = this.getImagemAtual();
         } else {
+            this.isPdfMode = false;
             imgObj = this.BASE_64_PNG + this.getImagemAtual();
             this.stringDownloadImagem = this.BASE_64_IMAGE + this.getImagemAtual();
         }
@@ -218,48 +222,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
     carregarViewerPDF() {
         this.esconderBotoesImageViewer();
-        const {widthIframe, heightIframe} = this.getTamanhoIframe();
-        this.injetarIframe(widthIframe, heightIframe);
-    }
-
-    injetarIframe(widthIframe: number, heightIframe: number) {
-        if (!this.idContainer) {
-            return;
-        }
-
-        const container = document.getElementById(this.idContainer);
-        if (!container) {
-            return;
-        }
-
-        const ivImageWrap = container.getElementsByClassName('iv-image-wrap').item(0);
-        if (!ivImageWrap) {
-            return;
-        }
-
-        const iframe = document.createElement('iframe');
-
-        iframe.id = this.getIdIframe();
-        iframe.style.width = `${widthIframe}px`;
-        iframe.style.height = `${heightIframe}px`;
-        iframe.src = `${this.converterPDFBase64ParaBlob()}`;
-
-        this.renderer.appendChild(ivImageWrap, iframe);
-    }
-
-    getTamanhoIframe() {
-        if (!this.idContainer) {
-            return {widthIframe: 0, heightIframe: 0};
-        }
-
-        const container = document.getElementById(this.idContainer);
-        if (!container) {
-            return {widthIframe: 0, heightIframe: 0};
-        }
-
-        const widthIframe = container.offsetWidth;
-        const heightIframe = container.offsetHeight;
-        return {widthIframe, heightIframe};
+        this.pdfBlob = this.converterPDFBase64ParaBlob();
     }
 
     esconderBotoesImageViewer() {
