@@ -73,7 +73,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     zoomPercent = 100;
 
     isPdfMode = false;
-    pdfBlob: string;
+    pdfBlob: Blob;
 
     constructor(private renderer: Renderer2) {}
 
@@ -447,9 +447,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
         const arrBuffer = this.base64ToArrayBuffer(this.getImagemAtual());
 
-        const newBlob = new Blob([arrBuffer], { type: 'application/pdf' });
-
-        return window.URL.createObjectURL(newBlob);
+        return new Blob([arrBuffer], { type: 'application/pdf' });
     }
 
     private getImagemAtual() {
