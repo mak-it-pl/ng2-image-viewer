@@ -7,10 +7,12 @@ import {
     OnInit,
     Output,
     Renderer2,
-    SimpleChanges
+    SimpleChanges,
+    ViewChild
 } from '@angular/core';
 
 import { ImageViewer, FullScreenViewer } from 'iv-viewer';
+import { NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerService } from 'ngx-extended-pdf-viewer';
 
 /**
  * @author Breno Prata - 22/12/2017
@@ -24,6 +26,7 @@ import { ImageViewer, FullScreenViewer } from 'iv-viewer';
     styleUrls: ['./image-viewer.component.scss']
 })
 export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
+    @ViewChild('extendedPdfViewer') extendedPdfViewer: any;
 
     BASE_64_IMAGE = 'data:image/png;base64,';
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
@@ -75,7 +78,8 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
     isPdfMode = false;
     pdfBlob: Blob;
 
-    constructor(private renderer: Renderer2) {}
+    constructor(private renderer: Renderer2,
+        private pdfViewerService: NgxExtendedPdfViewerService) { }
 
     ngOnInit() {
         if (this.loadOnInit) {
@@ -138,7 +142,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 
     buttonsColorChange(changes: SimpleChanges) {
         if (changes['buttonsColor'] || changes['rotate'] || changes['download']
-        || changes['fullscreen']) {
+            || changes['fullscreen']) {
             setTimeout(() => {
 
                 this.setStyleClass('footer-icon', 'color', this.buttonsColor);
@@ -511,4 +515,18 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
         }
         return this.idContainer + '-iframe';
     }
+
+
+    public onDownload() {
+        if (this.extendedPdfViewer?.service?.PDFViewerApplication) {
+            // Call the built-in download method
+            this.extendedPdfViewer.service.PDFViewerApplication.download();
+        } else {
+            console.error('PDF Viewer service is not initialized.');
+        }
+    };
+
+    public onPrint() {
+        this.pdfViewerService.print();
+    };
 }

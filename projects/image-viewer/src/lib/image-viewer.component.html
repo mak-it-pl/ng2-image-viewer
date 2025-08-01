@@ -1,7 +1,8 @@
 <div id="{{idContainer}}" class="image-gallery-2">
     <div class="image-container" [class.image-container--show]="!isPdfMode"></div>
     <ng-container *ngIf="isPdfMode && pdfBlob">
-        <ngx-extended-pdf-viewer [src]="pdfBlob"></ngx-extended-pdf-viewer>
+        <ngx-extended-pdf-viewer #extendedPdfViewer [src]="pdfBlob" [showSecondaryToolbarButton]="true"
+            [customToolbar]="additionalButtons"></ngx-extended-pdf-viewer>
     </ng-container>
     <div class="inline-icon" *ngIf="!showOnlyPDF">
         <div>
@@ -60,3 +61,39 @@
         <span id="current"></span>/<span class="total"></span>
     </div>
 </div>
+
+
+<ng-template #additionalButtons>
+    <div id="toolbarViewer">
+        <div id="toolbarViewerLeft">
+            <pdf-toggle-sidebar></pdf-toggle-sidebar>
+            <div class="toolbarButtonSpacer"></div>
+            <pdf-paging-area></pdf-paging-area>
+        </div>
+
+        <div id="toolbarViewerMiddleContainer">
+            <pdf-zoom-toolbar></pdf-zoom-toolbar>
+            <pdf-rotate-page></pdf-rotate-page>
+        </div>
+
+        <div id="toolbarViewerRight">
+            <button type="button" class="toolbarButton" (click)="onDownload()">
+                <i class="fa fa-2lg fa-download"></i>
+            </button>
+            <button type="button" class="toolbarButton" (click)="onPrint()">
+                <i class="fa fa-2lg fa-print"></i>
+            </button>
+            <div class="verticalToolbarSeparator hiddenSmallView"></div>
+            <pdf-toggle-secondary-toolbar>
+                <pdf-no-spread></pdf-no-spread>
+                <pdf-odd-spread></pdf-odd-spread>
+                <pdf-even-spread></pdf-even-spread>
+                <pdf-single-page-mode></pdf-single-page-mode>
+                <pdf-horizontal-scroll></pdf-horizontal-scroll>
+                <pdf-vertical-scroll-mode></pdf-vertical-scroll-mode>
+                <pdf-infinite-scroll></pdf-infinite-scroll>
+                <pdf-wrapped-scroll-mode></pdf-wrapped-scroll-mode>
+            </pdf-toggle-secondary-toolbar>
+        </div>
+    </div>
+</ng-template>
